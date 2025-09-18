@@ -1,20 +1,23 @@
-# Usamos la imagen oficial de Node.js
+# Imagen base oficial de Node.js
 FROM node:20
 
 # Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiamos package.json y package-lock.json
+# Copiamos los archivos de dependencias
 COPY package*.json ./
 
 # Instalamos dependencias
 RUN npm install
 
-# Copiamos todo el proyecto
+# Copiamos el resto del proyecto
 COPY . .
+
+# Construimos la app para producción
+RUN npx next build
 
 # Exponemos el puerto que usa Next.js
 EXPOSE 3000
 
-# Comando para iniciar Next.js en producción
+# Comando para iniciar la app en producción
 CMD ["npx", "next", "start"]
