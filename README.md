@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  Docker Steps Next js
 
-## Getting Started
+## 1- Crear un archivo Dockerfile en la raíz del proyecto
 
-First, run the development server:
+```
+# Imagen base oficial de Node.js
+FROM node:20
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiamos los archivos de dependencias
+COPY package*.json ./
+
+# Instalamos dependencias
+RUN npm install
+
+# Copiamos el resto del proyecto
+COPY . .
+
+# Construimos la app para producción
+RUN npx next build
+
+# Exponemos el puerto que usa Next.js
+EXPOSE 3000
+
+# Comando para iniciar la app en producción
+CMD ["npx", "next", "start"]
+```
+### 2-  Ver Imagenes construidas Cualquier ruta corre .OPTIONAL :  
+
+```
+docker images
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3- Reconstruir Imagen Docker
+```
+docker build -t hola-mundo-node-minuscula
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```
+-t : significa tag o le da un nombre a la imagen para poder usarla facil
+```
+### 4- Ejecutar El contenedor Actualizado
+```
+docker run --rm hola-mundo-node-minuscula
+```
+```
+--rm : significa remove cuando el contendor termine de ejecutarse.
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 5 - Ver contendores en Ejecucion ..OPTIONAL
 
-## Learn More
+```
+docker ps
+```
 
-To learn more about Next.js, take a look at the following resources:
+```
+docker ps -a
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+-a : significa ver todos los contenedores incluyendo los detenidos
+```
